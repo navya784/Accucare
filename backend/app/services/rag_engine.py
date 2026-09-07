@@ -51,7 +51,7 @@ retriever = vector_store.as_retriever(
 
 print("Connecting to OpenRouter (Llama 3.1)...")
 llm = ChatOpenAI(
-    model="minimax/minimax-m3:free",
+    model ="openrouter/free",
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
     temperature=0.1,
