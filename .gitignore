@@ -1,6 +1,8 @@
 .env
+.env.*
 venv/
 __pycache__/
+*.pyc
 *.db
 Clinical_Report_*.txt
 
