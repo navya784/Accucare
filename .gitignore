@@ -1,0 +1,8 @@
+.env
+venv/
+__pycache__/
+*.db
+Clinical_Report_*.txt
+
+backend/chroma_db/
+desktop.ini
