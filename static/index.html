@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AccuCare — Clinical Decision Support</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose-deep:#7A3B4C;
+    --rose-mid:#B9718A;
+    --rose-soft:#E9C9CE;
+    --blush:#F7ECE9;
+    --cream:#FDF8F6;
+    --ink:#2B1E22;
+    --ink-soft:#6B5A5E;
+    --gold:#C9A66B;
+    --line:#E8DAD8;
+    --radius-lg:22px;
+    --radius-sm:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces',serif;font-weight:500;}
+  a{text-decoration:none;color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  section{padding:96px 0;}
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(253,248,246,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:18px;padding-bottom:18px;
+  }
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:1.4rem;color:var(--rose-deep);}
+  .logo svg{width:30px;height:30px;}
+  .navlinks{display:flex;gap:34px;font-size:0.95rem;color:var(--ink-soft);}
+  .navlinks a:hover{color:var(--rose-deep);}
+  .nav-cta{display:flex;gap:14px;align-items:center;}
+  .btn{
+    padding:12px 26px;border-radius:999px;font-size:0.92rem;font-weight:600;
+    display:inline-block;border:1.5px solid transparent;transition:background .2s,color .2s,border-color .2s;
+  }
+  .btn-primary{background:var(--rose-deep);color:#fff;}
+  .btn-primary:hover{background:#5f2e3b;}
+  .btn-ghost{border-color:var(--rose-mid);color:var(--rose-deep);}
+  .btn-ghost:hover{background:var(--blush);}
+
+  /* HERO */
+  .hero{padding:70px 0 60px;}
+  .hero .wrap{
+    display:grid;grid-template-columns:0.75fr 1.3fr 0.95fr;gap:28px;align-items:center;
+  }
+
+  .hero-side-image{
+    position:relative;border-radius:var(--radius-lg);overflow:hidden;
+    height:480px;box-shadow:0 24px 55px -28px rgba(122,59,76,0.35);
+  }
+  .hero-side-image img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-side-image.doctor::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(0deg, rgba(122,59,76,0.5) 0%, rgba(122,59,76,0.02) 40%);
+  }
+  .hero-side-image.plants{display:flex;flex-direction:column;gap:14px;height:auto;box-shadow:none;}
+  .hero-side-image.plants .plant-shot{
+    border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -22px rgba(122,59,76,0.3);
+  }
+  .hero-side-image.plants .plant-shot img{width:100%;height:220px;object-fit:cover;display:block;}
+  .hero-side-image.plants .plant-shot:nth-child(2){margin-left:28px;}
+
+  .hero-center{text-align:center;}
+  .kicker{color:var(--rose-mid);font-size:0.95rem;margin-bottom:10px;letter-spacing:0.01em;}
+  @keyframes dropIn{
+    0%{opacity:0;transform:translateY(-46px);}
+    60%{opacity:1;transform:translateY(6px);}
+    100%{opacity:1;transform:translateY(0);}
+  }
+  .hero-center h1{
+    font-size:3.4rem;line-height:1.08;color:var(--ink);
+    animation:dropIn 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .hero-center h1 em{font-style:italic;color:var(--rose-deep);}
+  .hero-center .subtitle-pop{
+    display:block;margin-top:10px;letter-spacing:0.25em;text-transform:uppercase;
+    font-size:0.82rem;font-weight:600;color:var(--rose-mid);
+    animation:dropIn 0.9s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay:0.15s;
+  }
+  .hero-center p.lede{
+    margin:22px auto 0;color:var(--ink-soft);font-size:1.03rem;max-width:42ch;
+    animation:dropIn 0.9s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay:0.3s;
+  }
+  .hero-actions{display:flex;gap:16px;margin-top:30px;justify-content:center;}
+  .hero-stats{display:flex;gap:30px;margin-top:44px;justify-content:center;}
+  .hero-stats div{border-left:2px solid var(--rose-soft);padding-left:14px;text-align:left;}
+  .hero-stats strong{display:block;font-family:'Fraunces',serif;font-size:1.3rem;color:var(--rose-deep);}
+  .hero-stats span{font-size:0.82rem;color:var(--ink-soft);}
+
+  @media(max-width:980px){
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero-side-image{height:280px;order:3;}
+    .hero-side-image.plants{order:3;flex-direction:row;}
+    .hero-side-image.plants .plant-shot{flex:1;}
+    .hero-side-image.plants .plant-shot:nth-child(2){margin-left:0;margin-top:20px;}
+    .hero-center{order:1;}
+  }
+
+  .hero-badge{
+    position:absolute;bottom:20px;left:20px;right:20px;z-index:2;
+    background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);
+    border-radius:16px;padding:14px 18px;
+    display:flex;align-items:center;gap:12px;
+    box-shadow:0 12px 30px -12px rgba(0,0,0,0.25);
+  }
+  .hero-badge-icon{
+    width:36px;height:36px;border-radius:50%;background:var(--rose-deep);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;
+  }
+  .hero-badge-text strong{display:block;font-family:'Fraunces',serif;font-size:0.88rem;color:var(--ink);}
+  .hero-badge-text span{font-size:0.75rem;color:var(--ink-soft);}
+  .verified-tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:0.72rem;font-weight:600;
+    color:var(--rose-deep);background:#fff;padding:4px 10px;border-radius:999px;margin-top:8px;
+  }
+  .verified-tag svg{width:12px;height:12px;}
+
+  /* SERVICES */
+  .section-head{max-width:640px;margin:0 auto 52px;text-align:center;}
+  .section-head .kicker{justify-content:center;}
+  .section-head h2{font-size:2.2rem;color:var(--ink);}
+  .grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .feature-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:30px 26px;transition:border-color .2s, transform .2s;
+  }
+  .feature-card:hover{border-color:var(--rose-mid);transform:translateY(-3px);}
+  .feature-icon{
+    width:44px;height:44px;border-radius:12px;background:var(--blush);
+    display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--rose-deep);
+  }
+  .feature-card h3{font-size:1.08rem;font-weight:600;font-family:'Inter',sans-serif;margin-bottom:8px;}
+  .feature-card p{font-size:0.92rem;color:var(--ink-soft);}
+  .feature-card a.more{font-size:0.85rem;color:var(--rose-deep);font-weight:600;display:inline-block;margin-top:14px;}
+
+  /* ABOUT */
+  .about{background:var(--blush);}
+  .about .wrap{display:grid;grid-template-columns:0.95fr 1.05fr;gap:56px;align-items:center;}
+  .about-visual{
+    background:#fff;border-radius:var(--radius-lg);padding:34px;
+    box-shadow:0 24px 60px -30px rgba(122,59,76,0.35);
+    position:relative;
+  }
+  .about-visual .quote{font-family:'Fraunces',serif;font-style:italic;color:var(--rose-deep);font-size:1.05rem;}
+  .about-visual .quote-by{margin-top:14px;font-size:0.85rem;color:var(--ink-soft);}
+  .stat-panel{
+    position:absolute;bottom:-28px;right:-24px;background:var(--rose-deep);color:#fff;
+    border-radius:16px;padding:18px 22px;
+  }
+  .stat-panel strong{font-family:'Fraunces',serif;font-size:1.6rem;display:block;}
+  .stat-panel span{font-size:0.78rem;opacity:0.85;}
+  .about h2{font-size:2.1rem;margin-bottom:18px;color:var(--ink);}
+  .about p{color:var(--ink-soft);margin-bottom:16px;max-width:52ch;}
+  .about-points{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;}
+  .about-points div{display:flex;gap:10px;align-items:flex-start;font-size:0.9rem;color:var(--ink);}
+  .about-points svg{flex-shrink:0;width:18px;height:18px;color:var(--rose-deep);margin-top:2px;}
+
+  .about-stats{display:flex;flex-direction:column;gap:22px;background:var(--rose-deep);color:#fff;border-radius:var(--radius-lg);padding:34px;}
+  .about-stats div{border-bottom:1px solid rgba(255,255,255,0.18);padding-bottom:18px;}
+  .about-stats div:last-child{border-bottom:none;padding-bottom:0;}
+  .about-stats strong{font-family:'Fraunces',serif;font-size:1.7rem;display:block;}
+  .about-stats span{font-size:0.85rem;opacity:0.85;}
+
+  /* SPECIALTIES (team, avatar-based, no photos) */
+  .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .team-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px 20px;text-align:center;}
+  .avatar{
+    width:76px;height:76px;border-radius:50%;margin:0 auto 16px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:1.3rem;color:#fff;
+  }
+  .avatar.a1{background:linear-gradient(135deg,var(--rose-deep),var(--rose-mid));}
+  .avatar.a2{background:linear-gradient(135deg,var(--gold),var(--rose-mid));}
+  .avatar.a3{background:linear-gradient(135deg,var(--rose-mid),var(--rose-deep));}
+  .avatar.a4{background:linear-gradient(135deg,var(--rose-deep),var(--gold));}
+  .team-card h3{font-size:1rem;font-weight:600;}
+  .team-card span{font-size:0.82rem;color:var(--ink-soft);display:block;margin-top:4px;}
+
+  /* TESTIMONIALS */
+  .testimonials{background:var(--rose-deep);color:#fff;}
+  .testimonials .section-head h2, .testimonials .kicker{color:#fff;}
+  .testimonials .kicker{color:var(--rose-soft);}
+  .t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .t-card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:var(--radius-lg);padding:28px;}
+  .t-card p{font-size:0.95rem;opacity:0.92;font-style:italic;font-family:'Fraunces',serif;}
+  .t-by{display:flex;align-items:center;gap:12px;margin-top:20px;}
+  .t-avatar{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;color:var(--ink);font-size:0.95rem;}
+  .t-by strong{display:block;font-size:0.88rem;}
+  .t-by span{font-size:0.78rem;opacity:0.75;}
+
+  /* DEMO FORM */
+  .demo{padding-bottom:120px;}
+  .demo .wrap{display:grid;grid-template-columns:0.9fr 1.1fr;gap:56px;align-items:center;}
+  .demo-copy h2{font-size:2.1rem;margin-bottom:16px;}
+  .demo-copy p{color:var(--ink-soft);max-width:44ch;margin-bottom:24px;}
+  .demo-copy ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .demo-copy li{display:flex;gap:10px;align-items:center;font-size:0.92rem;}
+  .demo-copy li svg{width:18px;height:18px;color:var(--rose-deep);}
+  form.demo-form{
+    background:#fff;border-radius:var(--radius-lg);padding:36px;border:1px solid var(--line);
+    box-shadow:0 24px 60px -34px rgba(122,59,76,0.3);
+  }
+  form.demo-form h3{font-size:1.15rem;margin-bottom:22px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+  .form-row.full{grid-template-columns:1fr;}
+  input,select{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);
+    font-family:'Inter',sans-serif;font-size:0.9rem;background:var(--cream);color:var(--ink);
+  }
+  input:focus,select:focus{outline:2px solid var(--rose-mid);outline-offset:1px;}
+  .demo-form .btn-primary{width:100%;margin-top:8px;border:none;font-size:0.95rem;padding:14px;}
+
+  footer{background:var(--rose-deep);color:#fff;padding:64px 0 30px;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
+  .footer-grid h4{font-size:0.95rem;margin-bottom:16px;}
+  .footer-grid p, .footer-grid a{font-size:0.88rem;color:rgba(255,255,255,0.75);}
+  .footer-grid a{display:block;margin-bottom:10px;}
+  .footer-grid a:hover{color:#fff;}
+  .footer-bottom{
+    margin-top:50px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.18);
+    display:flex;justify-content:space-between;font-size:0.8rem;color:rgba(255,255,255,0.6);
+  }
+
+  @media(max-width:920px){
+    .hero .wrap, .about .wrap, .demo .wrap{grid-template-columns:1fr;}
+    .grid-6{grid-template-columns:repeat(2,1fr);}
+    .team-grid{grid-template-columns:repeat(2,1fr);}
+    .t-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .hero h1{font-size:2.3rem;}
+    .navlinks{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M20 4c8 5 14 5 14 5v13c0 9-6 14-14 18-8-4-14-9-14-18V9s6 0 14-5z" fill="#7A3B4C"/><path d="M20 14v12M14 20h12" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      AccuCare
+    </div>
+    <div class="navlinks">
+      <a href="#features">Product</a>
+      <a href="#about">Why AccuCare</a>
+      <a href="#team">Built by</a>
+      <a href="#testimonials">Clinicians say</a>
+    </div>
+    <div class="nav-cta">
+      <a href="http://localhost:8501/?portal=1" target="_top" class="btn btn-ghost">Enter Clinical Portal</a>
+      <a href="#demo" class="btn btn-primary">Request a demo</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-side-image plants">
+      <div class="plant-shot"><img src="images/plant-1.jpg" alt="Green plant by a window"></div>
+      <div class="plant-shot"><img src="images/plant-2.jpg" alt="Green plant in a bright corner"></div>
+    </div>
+
+    <div class="hero-center">
+      <p class="kicker">Guideline-grounded · point of care</p>
+      <h1>AccuCare</h1>
+      <span class="subtitle-pop">accurate + care</span>
+      <p class="lede">AccuCare puts your trusted guidelines — NICE, WHO, and your own protocols — directly into the consultation room, with every recommendation traced back to its source. Built so clinicians spend less time cross-checking and more time with patients.</p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn btn-primary">Request a demo</a>
+        <a href="#features" class="btn btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>2,400+</strong><span>Guideline pages indexed</span></div>
+        <div><strong>&lt;4s</strong><span>Average response time</span></div>
+        <div><strong>100%</strong><span>Citations traced to source</span></div>
+      </div>
+    </div>
+
+    <div class="hero-side-image doctor">
+      <img src="images/doctor-hero.jpeg" alt="Clinician reviewing care with compassion">
+      <div class="hero-badge">
+        <div class="hero-badge-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V4l7-3z"/></svg>
+        </div>
+        <div class="hero-badge-text">
+          <strong>Verified — WHO Fever Protocol, p.12</strong>
+          <span>Every recommendation traced to its source</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">What AccuCare does</p>
+      <h2>Everything you need at the point of care</h2>
+    </div>
+    <div class="grid-6">
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9-9c-1.5-3.5 1-7 4.5-7 2 0 3.5 1 4.5 2.5C13 6 14.5 5 16.5 5 20 5 22.5 8.5 21 12c-2 4.5-9 9-9 9z"/></svg></div>
+        <h3>Guideline-grounded chat</h3>
+        <p>Ask a clinical question in plain language and get an answer drawn only from your indexed trusted guidelines — never invented.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4M7 3h10l4 4v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg></div>
+        <h3>Verified citations</h3>
+        <p>Every recommendation is cross-checked against the retrieved source before it's shown, with unverified answers clearly flagged.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h11l5 5v11a1 1 0 01-1 1H4a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M15 4v5h5M8 13h8M8 17h5"/></svg></div>
+        <h3>Patient report generation</h3>
+        <p>Turn a consultation into a structured, saved clinical report in seconds — searchable later by patient or date.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <h3>Session-aware conversations</h3>
+        <p>Follow-up questions understand the thread — no repeating patient context turn after turn.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15a4 4 0 004-4V6a4 4 0 00-8 0v5a4 4 0 004 4z"/><path d="M19 11a7 7 0 01-14 0M12 19v3"/></svg></div>
+        <h3>Downloadable PDF reports</h3>
+        <p>Export any report as a formatted PDF, ready to attach to a patient record or hand to a colleague.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 9h1M9 13h6M9 17h6"/></svg></div>
+        <h3>Multi-source guideline library</h3>
+        <p>Load NICE, WHO, and your institution's own protocols side by side — AccuCare cites which one it drew from.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-visual-wrap">
+      <div class="about-visual">
+        <p class="quote">"The first tool where I don't have to double-check every citation myself — it already tells me when it isn't sure."</p>
+        <p class="quote-by">— Early pilot feedback, internal medicine</p>
+        <div class="stat-panel">
+          <strong>98%</strong>
+          <span>Citation match rate</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-copy">
+      <p class="kicker">About AccuCare</p>
+      <h2>Built to close the gap between guidelines and the exam room</h2>
+      <p>AccuCare is a clinical decision-support tool built for the moment a doctor needs a specific, sourced answer — not a search engine result, not a chatbot guessing from memory. It retrieves directly from indexed guideline documents like NICE and WHO protocols, and verifies every citation it writes against what was actually retrieved before it's shown to you.</p>
+      <p>Where most AI tools blur the line between "I know this" and "I found this," AccuCare keeps that line visible — so you always know whether a recommendation is guideline-sourced or needs a second look.</p>
+      <div class="about-points">
+        <div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Local, private guideline storage</div>
+        <div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Full session &amp; report history</div>
+        <div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Citation-level verification</div>
+        <div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Built for real consultation pace</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Built by</p>
+      <h2>A tool shaped by clinical and technical review</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="avatar a1">RS</div>
+        <h3>Clinical Advisory</h3>
+        <span>Guideline curation &amp; review</span>
+      </div>
+      <div class="team-card">
+        <div class="avatar a2">ML</div>
+        <h3>Retrieval Engineering</h3>
+        <span>RAG pipeline &amp; verification</span>
+      </div>
+      <div class="team-card">
+        <div class="avatar a3">UX</div>
+        <h3>Point-of-Care Design</h3>
+        <span>Workflow &amp; interface</span>
+      </div>
+      <div class="team-card">
+        <div class="avatar a4">QA</div>
+        <h3>Safety &amp; Testing</h3>
+        <span>Citation accuracy audits</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">What clinicians are saying</p>
+      <h2>Real feedback from pilot use</h2>
+    </div>
+    <div class="t-grid">
+      <div class="t-card">
+        <p>"It flagged an unverified citation I would've otherwise trusted. That's exactly the kind of safety net I want from an AI tool."</p>
+        <div class="t-by"><div class="t-avatar">A</div><div><strong>Family Medicine, Resident</strong><span>Pilot user</span></div></div>
+      </div>
+      <div class="t-card">
+        <p>"Cuts the time I spend digging through PDFs for the exact page. I get the answer and the source in one place."</p>
+        <div class="t-by"><div class="t-avatar">N</div><div><strong>General Practice</strong><span>Pilot user</span></div></div>
+      </div>
+      <div class="t-card">
+        <p>"Report generation alone saves me ten minutes per patient — and it's already linked to the record."</p>
+        <div class="t-by"><div class="t-avatar">P</div><div><strong>Internal Medicine</strong><span>Pilot user</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="demo" id="demo">
+  <div class="wrap">
+    <div class="demo-copy">
+      <p class="kicker">Get started</p>
+      <h2>See AccuCare with your own guidelines</h2>
+      <p>Request a walkthrough and we'll show how AccuCare indexes your protocols and grounds every answer to them.</p>
+      <ul>
+        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>15-minute guided demo</li>
+        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>No commitment required</li>
+        <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>Bring your own guideline PDFs</li>
+      </ul>
+    </div>
+    <form class="demo-form" onsubmit="event.preventDefault();">
+      <h3>Request a demo</h3>
+      <div class="form-row">
+        <input type="text" placeholder="Full name" required>
+        <input type="text" placeholder="Specialty" required>
+      </div>
+      <div class="form-row">
+        <input type="email" placeholder="Work email" required>
+        <input type="tel" placeholder="Phone number">
+      </div>
+      <div class="form-row full">
+        <select required>
+          <option value="">Institution type</option>
+          <option>Hospital</option>
+          <option>Private clinic</option>
+          <option>Academic / teaching</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-row full">
+        <input type="text" placeholder="Preferred date">
+      </div>
+      <button class="btn btn-primary" type="submit">Request demo</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="color:#fff;margin-bottom:14px;">
+          <svg viewBox="0 0 40 40" fill="none"><path d="M20 4c8 5 14 5 14 5v13c0 9-6 14-14 18-8-4-14-9-14-18V9s6 0 14-5z" fill="#fff"/><path d="M20 14v12M14 20h12" stroke="#7A3B4C" stroke-width="2.4" stroke-linecap="round"/></svg>
+          AccuCare
+        </div>
+        <p>Guideline-grounded clinical decision support, built for the point of care.</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#about">Why AccuCare</a>
+        <a href="#demo">Request a demo</a>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <a href="#">Guideline library</a>
+        <a href="#">Documentation</a>
+        <a href="#">Safety &amp; verification</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="#">hello@accucare.health</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AccuCare. Built for clinicians.</span>
+      <span>Privacy Policy · Terms</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
