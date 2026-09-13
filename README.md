@@ -1,4 +1,4 @@
-#ACCUCARE 
+
 # AccuCare
 
 **AccuCare** is a Clinical Decision Support System (CDSS) built to assist doctors by combining a retrieval-augmented AI pipeline with structured patient record management. It grounds its responses in trusted clinical guideline documents, helping ensure that AI-assisted suggestions are traceable back to verified medical sources rather than relying on unchecked model outputs.
